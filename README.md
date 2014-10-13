@@ -1,5 +1,7 @@
 # Docker Registry Web interface
 
+[![Build Status](https://travis-ci.org/Geodan/docker-registry-ui.svg)](https://travis-ci.org/Geodan/docker-registry-ui)
+
 ## Synopsis
 
 This Java application made with Spring Boot, Bootstrap and Handlebars creates a web interface for easy use of the
