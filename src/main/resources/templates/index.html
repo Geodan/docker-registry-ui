@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet" />
+
+    <style type="text/css">
+        body {margin: 2em auto; background-color: #eee; font-size: 10pt;}
+        .logo {margin-bottom: 2em;}
+        .docker-image {background-color: #fff; border: 2px solid #345761; border-radius: 8px; padding: 15px 30px; box-sizing: border-box; margin-bottom: 1.5em; box-shadow: 0px 2px 3px #666;}
+        .docker-image div {margin: 0; padding: 0;}
+        a, a:link, a:hover {text-decoration: none;}
+        td, th {padding-top: 0.2em; padding-bottom: 0.3em;}
+    </style>
+
+    <title>Geodan Docker Registry</title>
+</head>
+<body>
+<div class="container">
+    <div class="row text-center">
+        <img src="images/docker-logo.png" alt="Docker logo" class="logo" style="width:500px;" />
+    </div>
+    <div class="row">
+        <div class="col-lg-10 col-lg-offset-1" id="content"></div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/handlebars2.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    $(document).ready(function() {
+        var baseUrl = /*[[${baseUrl}]]*/ '';
+
+        $.get('application.hbs', function(template) {
+            var result = Handlebars.compile(template);
+            $.get('/tags', function(json) {
+                $('#content').html(result(json));
+                $('.image-pull').val(function() {
+                    return 'docker pull ' + baseUrl + '/' + $(this).data('image')
+                });
+                $('.image-run').val(function() {
+                    var image = $(this).data('image');
+                    return syncGet('/run/' + image);
+                });
+
+                $('input[type="text"].image-pull').on('click', function () { $(this).select(); });
+
+                $('a[href="#save"]').on('click', function(e) {
+                    var self = this;
+                    e.preventDefault();
+                    $.post('/run/' + $(self).data('image'), {"command": $('input[data-image="' + $(self).data('image') +'"].image-run').val()}, function() {
+                        $(self).css('color', '#009855');
+                    });
+                });
+            });
+        });
+    });
+
+    function syncGet(request) {
+        var returnValue;
+        $.ajax({ url: request, cache: false, async: false, type: 'GET', success: function(data) { returnValue = data; } });
+        return returnValue;
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

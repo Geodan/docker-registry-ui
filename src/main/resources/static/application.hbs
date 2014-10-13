@@ -1,0 +1,23 @@
+{{#each .}}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1 docker-image">
+            <div class="row">
+                <div class="h3 col-md-8"><span class="image-name">{{@key}}</span> {{#each .}} <small>{{this}}</small> {{/each}}</div>
+            </div>
+            <div class="row" data-info="{{@key}}">
+                <table class="h5 col-md-12">
+                    <tr>
+                        <th class="col-md-1">Pull</th>
+                        <td class="col-md-10"><input class="form-control image-pull" style="border: 1px solid #008bb8;" type="text" data-image="{{@key}}"></td>
+                    </tr>
+                    <tr>
+                        <th class="col-md-1">Run</th>
+                        <td class="col-md-10"><input class="form-control image-run" style="border: 1px solid #008bb8;" type="text" data-image="{{@key}}"></td>
+                        <td class="col-md-1 h3"><a href="#save" class="glyphicon glyphicon-ok-sign" style="padding-top:3px;" data-image="{{@key}}"></a></td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+{{/each}}
